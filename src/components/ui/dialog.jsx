@@ -80,6 +80,7 @@ const DialogDescription = React.forwardRef(({ className, ...props }, ref) => (
     className={cn("text-sm text-muted-foreground", className)}
     {...props} />
 ))
+
 DialogDescription.displayName = DialogPrimitive.Description.displayName
 
 export {
