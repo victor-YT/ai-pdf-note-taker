@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import {Button} from '@/components/ui/button'
 import {Layout} from "lucide-react";
+import {Progress} from "@/components/ui/progress";
 
 function Sidebar() {
     return (
@@ -19,6 +20,10 @@ function Sidebar() {
                     <Layout/>
                     <h2>Upgrade</h2>
                 </div>
+            </div>
+            <div className='absolute bottom-12 w-[80%]'>
+                <Progress value={33}/>
+                <p className="text-sm mt-1">2 out of 5 PDF Uploaded</p>
             </div>
         </div>
     )
