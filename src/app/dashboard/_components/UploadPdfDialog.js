@@ -1,5 +1,6 @@
 "use client"
 import React, {useState} from 'react'
+import axios from 'axios'
 import {
     Dialog,
     DialogContent,
@@ -59,6 +60,10 @@ function UploadPdfDialog({children}) {
             createdBy: user?.primaryEmailAddress?.emailAddress
         })
         console.log(resp)
+
+        // API call to fetch PDF process data
+        const ApiResponse = await axios.get('/api/pdf_loader')
+        console.log(ApiResponse.data.result)
         setLoading(false)
     }
 
