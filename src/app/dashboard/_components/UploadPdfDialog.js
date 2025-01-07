@@ -23,6 +23,7 @@ function UploadPdfDialog({children}) {
 
     const generateUploadUrl = useMutation(api.fileStorage.generateUploadUrl)
     const addFileEntry = useMutation(api.fileStorage.AddFileEntryToDb)
+    const getFileUrl = useMutation(api.fileStorage.getFileUrl)
     const [file, setFile] = useState()
     const [loading, setLoading] = useState(false)
     const {user} = useUser()
@@ -48,11 +49,13 @@ function UploadPdfDialog({children}) {
         console.log('storageId: ',storageId)
 
         const fileId = uuid4()
+        const fileUrl = await getFileUrl({storageId: storageId})
         // 3. save the newly allocated storage id to the database
         const resp = await addFileEntry({
             fileId: fileId,
             storageId: storageId,
             fileName: fileName??'Untitled File',
+            fileUrl: fileUrl,
             createdBy: user?.primaryEmailAddress?.emailAddress
         })
         console.log(resp)

@@ -1,4 +1,4 @@
-import { mutation } from "./_generated/server";
+import {mutation} from "./_generated/server";
 import {v} from "convex/values";
 
 export const generateUploadUrl = mutation(async (ctx) => {
@@ -9,6 +9,7 @@ export const AddFileEntryToDb = mutation({
     args: {
         fileId: v.string(),
         storageId: v.string(),
+        fileUrl: v.string(),
         fileName: v.string(),
         createdBy: v.string()
     },
@@ -17,12 +18,21 @@ export const AddFileEntryToDb = mutation({
             fileId: args.fileId,
             fileName: args.fileName,
             storageId: args.storageId,
+            fileUrl: args.fileUrl,
             createdBy: args.createdBy
         })
         return 'Inserted new file'
     }
 })
 
+export const getFileUrl = mutation({
+    args: {
+        storageId: v.string()
+    },
+    handler: async (ctx, args) => {
+        return await ctx.storage.getUrl(args.storageId)
+    }
+})
 
 
 
