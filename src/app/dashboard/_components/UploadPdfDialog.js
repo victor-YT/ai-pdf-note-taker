@@ -1,5 +1,6 @@
 "use client"
 import React, {useState} from 'react'
+import { X } from "lucide-react"
 import axios from 'axios'
 import {
     Dialog,
@@ -10,10 +11,11 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
+    DialogPrimitive
 } from "@/components/ui/dialog"
 import {Input} from "@/components/ui/input"
 import {Button} from "@/components/ui/button"
-import {useMutation} from "convex/react"
+import {useAction, useMutation} from "convex/react"
 import {api} from "../../../../convex/_generated/api"
 import {Loader2Icon} from "lucide-react"
 import uuid4 from "uuid4"
@@ -25,10 +27,12 @@ function UploadPdfDialog({children}) {
     const generateUploadUrl = useMutation(api.fileStorage.generateUploadUrl)
     const addFileEntry = useMutation(api.fileStorage.AddFileEntryToDb)
     const getFileUrl = useMutation(api.fileStorage.getFileUrl)
+    const embeddingDocument = useAction(api.myAction.ingest)
     const [file, setFile] = useState()
     const [loading, setLoading] = useState(false)
     const {user} = useUser()
     const [fileName, setFileName] = useState()
+    const [open, setOpen] = useState(false)
 
     const onFileSelect = (event) => {
         setFile(event.target.files[0])
@@ -59,18 +63,24 @@ function UploadPdfDialog({children}) {
             fileUrl: fileUrl,
             createdBy: user?.primaryEmailAddress?.emailAddress
         })
-        console.log(resp)
+        // console.log(resp)
 
         // API call to fetch PDF process data
-        const ApiResponse = await axios.get('/api/pdf_loader')
+        const ApiResponse = await axios.get('/api/pdf_loader?pdfUrl='+fileUrl)
         console.log(ApiResponse.data.result)
+        await embeddingDocument({
+            splitText: ApiResponse.data.result,
+            fileId: fileId
+        })
+        // console.log(embeddingResult)
         setLoading(false)
+        setOpen(false)
     }
 
     return (
-        <Dialog>
+        <Dialog open={open}>
             <DialogTrigger asChild>
-                {children}
+                <Button onClick={() => setOpen(true)} className={'w-full'}>+ Upload PDF File</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -88,14 +98,20 @@ function UploadPdfDialog({children}) {
                             </div>
                         </div>
                     </DialogDescription>
+                    <DialogPrimitive.Close
+                        className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+                        onClick={() => {setOpen(false)}}>
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Close</span>
+                    </DialogPrimitive.Close>
                 </DialogHeader>
                 <DialogFooter className="sm:justify-end">
                     <DialogClose asChild>
-                        <Button type="button" variant="secondary">
-                            Close
+                        <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
+                            Cancel
                         </Button>
                     </DialogClose>
-                    <Button onClick={OnUpload}>
+                    <Button onClick={OnUpload} disabled={loading}>
                         {loading?
                             <Loader2Icon className='animate-spin'/>:'Upload'
                         }

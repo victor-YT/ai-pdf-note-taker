@@ -3,9 +3,14 @@ import {WebPDFLoader} from "@langchain/community/document_loaders/web/pdf"
 import {RecursiveCharacterTextSplitter} from "langchain/text_splitter"
 
 
-const pdfUrl = "https://savory-oyster-573.convex.cloud/api/storage/9a18f7ba-c189-4bb3-a060-71c216708d48"
+// const pdfUrl = "https://savory-oyster-573.convex.cloud/api/storage/9a18f7ba-c189-4bb3-a060-71c216708d48"
 
 export async function GET (req) {
+
+    const reqUrl = req.url
+    const {searchParams} = new URL(reqUrl)
+    const pdfUrl = searchParams.get('pdfUrl')
+    console.log(pdfUrl)
 
     // 1. load the PDF file
     const response = await fetch(pdfUrl)
