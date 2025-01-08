@@ -1,9 +1,14 @@
 import React from 'react'
 import {Bold, Italic, Highlighter, Strikethrough, Subscript, Superscript, Underline, Heading1, Heading2, Heading3, Code, AlignLeft, AlignCenter, AlignRight, Sparkles} from 'lucide-react'
+import {api} from "../../../../convex/_generated/api"
+import {useParams} from "next/navigation"
+import { useAction } from 'convex/react'
 
 function EditorExtension({editor}) {
+    const {fileId} = useParams()
+    const SearchAI = useAction(api.myAction.search)
 
-    const onAiClick = () => {
+    const onAiClick = async () => {
         if (editor.state.selection.from === editor.state.selection.to) {
             console.log("No text selected, start tracking");
 
@@ -21,6 +26,12 @@ function EditorExtension({editor}) {
                 ''
             )
             console.log(selectedText)
+
+            const result = await SearchAI({
+                query: selectedText,
+                fileId: fileId
+            })
+            console.log("nows answer: ", result)
         }
     }
 
