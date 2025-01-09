@@ -6,6 +6,7 @@ import { useAction } from 'convex/react'
 
 function EditorExtension({editor}) {
     const {fileId} = useParams()
+    // console.log("get file id in: ", fileId)
     const SearchAI = useAction(api.myAction.search)
 
     const onAiClick = async () => {
