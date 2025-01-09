@@ -30,6 +30,6 @@ export const GetNotes = query ({
     handler: async (ctx, args) => {
         const result = await ctx.db.query('notes')
             .filter((q) => q.eq(q.field('fileId'), args.fileId)).collect()
-        return result[0].notes
+        return result[0]?.notes
     }
 })

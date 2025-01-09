@@ -58,8 +58,10 @@ function TextEditor({fileId}) {
     })
 
     useEffect(() => {
-        editor&&editor.commands.setContent(notes)
-    }, [notes&&editor])
+        if (notes && editor) {
+            editor.commands.setContent(notes)
+        }
+    }, [notes && editor])
 
     if (!editor) {
         return null
