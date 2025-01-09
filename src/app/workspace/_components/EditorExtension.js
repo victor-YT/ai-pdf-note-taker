@@ -2,24 +2,25 @@ import React from 'react'
 import {Bold, Italic, Highlighter, Strikethrough, Subscript, Superscript, Underline, Heading1, Heading2, Heading3, Code, AlignLeft, AlignCenter, AlignRight, Sparkles} from 'lucide-react'
 import {api} from "../../../../convex/_generated/api"
 import {useParams} from "next/navigation"
-import { useAction } from 'convex/react'
+import {useAction, useMutation} from 'convex/react'
 import {chatSession} from "@/configs/AIModel"
+import {toast} from "sonner"
+import {useUser} from "@clerk/nextjs";
 
 function EditorExtension({editor}) {
     const {fileId} = useParams()
-    // console.log("get file id in: ", fileId)
     const SearchAI = useAction(api.myAction.search)
+    const saveNotes = useMutation(api.notes.AddNotes)
+    const {user} = useUser()
 
     const onAiClick = async () => {
+        toast("AI is getting the answer ...")
         if (editor.state.selection.from === editor.state.selection.to) {
-            console.log("No text selected, start tracking");
-
+            console.log("No text selected, start tracking")
+            const AllText = editor.getHTML()
             editor.commands.focus()
-            editor.commands.insertContent('\n')
-            editor.commands.insertContent('-> ')
-            editor.commands.focus()
-
-            editor.commands.setTextSelection({options: { scrollIntoView: false } });
+            editor.commands.setContent(AllText + '<p>->&nbsp;</p>')
+            let selectedText = ""
 
         } else {
             const selectedText = editor.state.doc.textBetween(
@@ -48,6 +49,12 @@ function EditorExtension({editor}) {
             const finalAns = AiModelResult.response.text().replace("'", '').replace("'", '')
             const AllText = editor.getHTML()
             editor.commands.setContent(AllText + '<p> <strong>Answer: </strong>'+finalAns+'</p>')
+
+            saveNotes({
+                notes: editor.getHTML(),
+                fileId: fileId,
+                createdBy: user?.primaryEmailAddress?.emailAddress
+            })
         }
     }
 

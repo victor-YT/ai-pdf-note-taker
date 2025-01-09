@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {EditorContent, useEditor} from "@tiptap/react"
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from "@tiptap/extension-placeholder"
@@ -15,10 +15,17 @@ import Link from '@tiptap/extension-link'
 import Strike from '@tiptap/extension-strike'
 import EditorExtension from "@/app/workspace/_components/EditorExtension"
 import { all, createLowlight } from 'lowlight'
+import {useQuery} from "convex/react";
+import {api} from "../../../../convex/_generated/api";
 
 const lowlight = createLowlight(all)
 
-function TextEditor() {
+function TextEditor({fileId}) {
+
+    const notes = useQuery(api.notes.GetNotes, {
+        fileId: fileId
+    })
+
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -50,6 +57,10 @@ function TextEditor() {
         }
     })
 
+    useEffect(() => {
+        editor&&editor.commands.setContent(notes)
+    }, [notes&&editor])
+
     if (!editor) {
         return null
     }
@@ -57,7 +68,7 @@ function TextEditor() {
     return (
         <div>
             <EditorExtension editor={editor}/>
-            <div>
+            <div className='overflow-scroll h-[88vh]'>
                 <EditorContent editor={editor}/>
             </div>
         </div>
