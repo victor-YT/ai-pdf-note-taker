@@ -41,13 +41,12 @@ export const search = action({
             }),
             { ctx });
 
-        const resultOne = (await vectorStore.similaritySearch(args.query, 1))
+        const resultOne = (await vectorStore.similaritySearch(args.query, 5))
             .filter(q => {
                 console.log("q:", q)
                 return q.metadata.fileId === args.fileId
             })
         console.log("result1: ", resultOne)
-
         return JSON.stringify(resultOne)
     }
 })

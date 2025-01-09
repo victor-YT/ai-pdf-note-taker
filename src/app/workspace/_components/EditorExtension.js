@@ -3,6 +3,7 @@ import {Bold, Italic, Highlighter, Strikethrough, Subscript, Superscript, Underl
 import {api} from "../../../../convex/_generated/api"
 import {useParams} from "next/navigation"
 import { useAction } from 'convex/react'
+import {chatSession} from "@/configs/AIModel"
 
 function EditorExtension({editor}) {
     const {fileId} = useParams()
@@ -32,7 +33,21 @@ function EditorExtension({editor}) {
                 query: selectedText,
                 fileId: fileId
             })
-            console.log("nows answer: ", result)
+
+            const UnformattedAns = JSON.parse(result)
+            let AllUnformattedAns=''
+            UnformattedAns && UnformattedAns.forEach(item => {
+                AllUnformattedAns = AllUnformattedAns + item.pageContent
+            })
+
+            const PROMT = "For question: " + selectedText + " and the given content as answer," +
+                " please give only one appropriate answer in string format (use '' to content the answer). The answer content is: " + AllUnformattedAns
+
+            const AiModelResult = await chatSession.sendMessage(PROMT)
+            console.log("final answer: ", AiModelResult.response.text())
+            const finalAns = AiModelResult.response.text().replace("'", '').replace("'", '')
+            const AllText = editor.getHTML()
+            editor.commands.setContent(AllText + '<p> <strong>Answer: </strong>'+finalAns+'</p>')
         }
     }
 
