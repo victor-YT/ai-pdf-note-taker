@@ -20,6 +20,7 @@ import {api} from "../../../../convex/_generated/api"
 import {Loader2Icon} from "lucide-react"
 import uuid4 from "uuid4"
 import {useUser} from "@clerk/nextjs";
+import {toast} from "sonner";
 
 
 function UploadPdfDialog({children}) {
@@ -75,6 +76,7 @@ function UploadPdfDialog({children}) {
         // console.log(embeddingResult)
         setLoading(false)
         setOpen(false)
+        toast('File is ready ...')
     }
 
     return (
