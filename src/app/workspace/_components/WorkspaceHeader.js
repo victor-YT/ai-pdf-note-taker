@@ -7,7 +7,7 @@ function WorkspaceHeader({fileName}) {
     return (
         <div className='p-4 flex justify-between shadow-md'>
             <Image src={'/logo.svg'} alt='logo' width={140} height={140}/>
-            <h2 className="font-bold absolute left-1/2 transform -translate-x-1/2">{fileName}</h2>
+            <h2 className="center-text absolute left-1/2 transform">{fileName}</h2>
             <div className="flex gap-2 items-center ml-auto mr-6">
                 <Button>save</Button>
             </div>

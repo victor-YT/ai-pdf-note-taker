@@ -1,6 +1,35 @@
+"use client"
 import React from 'react'
+import {PayPalButtons} from "@paypal/react-paypal-js"
+import {useMutation} from "convex/react"
+import {api} from "../../../../convex/_generated/api"
+import {useUser} from "@clerk/nextjs"
+import {toast} from 'sonner'
+import {Button} from "@/components/ui/button";
 
 function UpgradePlans() {
+
+    const userUpgradePlan = useMutation(api.user.userUpgradePlan)
+    const {user} = useUser()
+
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    const testEmail = async () => {
+        console.log("User object test:", user)
+        console.log("Window:", window)
+        await console.log(user?.primaryEmailAddress?.emailAddress)
+    }
+    const onPaymentSuccess = async () => {
+        console.log("do upgrading")
+        await sleep(5000);
+        const result = await userUpgradePlan({userEmail: user?.primaryEmailAddress?.emailAddress})
+        console.log(result)
+        toast('Plan upgraded successfully !')
+    }
+
     return (
         <div>
             <h2 className='font-medium text-2xl'>plans</h2>
@@ -88,15 +117,48 @@ function UpgradePlans() {
 
                         </ul>
 
-                        <a
-                            href="#"
-                            className="mt-8 block rounded-full border border-amber-400 bg-amber-400 px-12 py-3 text-center text-sm font-medium text-white hover:bg-amber-500 hover:ring-1 hover:ring-amber-500 focus:outline-none focus:ring active:text-amber-400"
-                        >
-                            Get Started
-                        </a>
+                        {/*<a*/}
+                        {/*    href="#"*/}
+                        {/*    className="mt-8 block rounded-full border border-amber-400 bg-amber-400 px-12 py-3 text-center text-sm font-medium text-white hover:bg-amber-500 hover:ring-1 hover:ring-amber-500 focus:outline-none focus:ring active:text-amber-400"*/}
+                        {/*>*/}
+                        {/*    Get Started*/}
+                        {/*</a>*/}
+                        <div className='mt-5'>
+                            <Button onClick={() => testEmail()}/>
+                            {/*    onApprove={ async (data, actions) => {*/}
+                            {/*        const orderDetails = await actions.order.capture();*/}
+                            {/*        console.log("order detials: ", orderDetails)*/}
+                            {/*        const userEmail = orderDetails.purchase_units[0].description;*/}
+                            {/*        console.log("Data:", data);       // 包含订单相关的信息*/}
+                            {/*        console.log("Actions:", actions); // 提供额外的方法（如获取订单详细信息）*/}
+                            {/*        console.log("email:", userEmail);*/}
+                            {/*        console.log("user:", user);*/}
+                            {/*        // this one not working, user=undefined*/}
+                            {/*        const result = await userUpgradePlan({userEmail: userEmail})*/}
+                            {/*        console.log(result)*/}
+                            {/*        toast('Plan upgraded successfully !')*/}
+                            {/*    }}*/}
+                            <PayPalButtons
+                                onApprove={() => onPaymentSuccess()}
+                                onCancel={() => console.log("Payment Cancel")}
+                                createOrder={(data, actions) => {
+                                    return actions?.order?.create({
+                                        purchase_units:[
+                                            {
+                                                amount: {
+                                                    value: 0.01,
+                                                    currency_code: 'USD',
+                                                },
+                                                // description: `${user?.primaryEmailAddress?.emailAddress}`
+                                        }
+                                    ]
+                                })
+                            }}/>
+                        </div>
                     </div>
 
                     <div className="rounded-2xl border border-gray-200 p-6 shadow-sm sm:px-8 lg:p-12">
+
                         <div className="text-center">
                             <h2 className="text-lg font-medium text-gray-900">
                                 Starter
