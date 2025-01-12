@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {Bold, Italic, Highlighter, Strikethrough, Subscript, Superscript, Underline, Heading1, Heading2, Heading3, Code, AlignLeft, AlignCenter, AlignRight, Sparkles} from 'lucide-react'
 import {api} from "../../../../convex/_generated/api"
 import {useParams} from "next/navigation"
@@ -13,24 +13,55 @@ function EditorExtension({editor}) {
     const SearchAI = useAction(api.myAction.search)
     const saveNotes = useMutation(api.notes.AddNotes)
     const {user} = useUser()
+    const [tracking, setTracking] = useState(false)
+    const handleKeyDown = (event) => {
+        console.log("input key:", event.key)
+        if (event.key === "Enter") {
+            console.log("get the enter");
+            setTracking(false)
+        } else {
+            setTracking(true)
+        }
+    }
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyDown)
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown)
+        }
+    }, [])
 
     const onAiClick = async () => {
-        toast("AI is getting the answer ...")
+        // toast("AI is getting the answer ...")
         if (editor.state.selection.from === editor.state.selection.to) {
             console.log("No text selected, start tracking")
             const AllText = editor.getHTML()
             editor.commands.focus()
             editor.commands.setContent(AllText + '<p>->&nbsp;</p>')
             let selectedText = ""
-
+            let previousContent = editor.getText()
+            setTracking(true)
+            editor.on('update', ({ editor }) => {
+                const currentContent = editor.getText()
+                console.log(tracking)
+                if (previousContent !== "" && tracking) {
+                    const addedContent = currentContent.replace(previousContent, "")
+                    selectedText += addedContent
+                    console.log("addedContent:",addedContent)
+                    console.log("selectedText:",selectedText)
+                }
+                previousContent = currentContent
+            })
+            toast("AI is getting the answer ...")
+            console.log(selectedText)
         } else {
+            toast("AI is getting the answer ...")
             const selectedText = editor.state.doc.textBetween(
                 editor.state.selection.from,
                 editor.state.selection.to,
                 ''
             )
             console.log(selectedText)
-            console.log(fileId)
+
             const result = await SearchAI({
                 query: selectedText,
                 fileId: fileId
@@ -39,14 +70,13 @@ function EditorExtension({editor}) {
             const UnformattedAns = JSON.parse(result)
             let AllUnformattedAns=''
             UnformattedAns && UnformattedAns.forEach(item => {
-                console.log("get iem page content", item.pageContent)
                 AllUnformattedAns = AllUnformattedAns + item.pageContent
-                console.log("AllUnformattedAns", AllUnformattedAns)
             })
+            console.log("AllUnformattedAns", AllUnformattedAns)
 
             const PROMT = "For question: " + selectedText + " and the given content as answer," +
                 " please give only one appropriate answer in string format (use '' to content the answer). The answer content is: " + AllUnformattedAns
-
+            console.log("PROMT:", PROMT)
             const AiModelResult = await chatSession.sendMessage(PROMT)
             console.log("final answer: ", AiModelResult.response.text())
             const finalAns = AiModelResult.response.text().replace("'", '').replace("'", '')

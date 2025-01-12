@@ -3,9 +3,11 @@ import React from 'react'
 import {UserButton, useUser} from "@clerk/nextjs"
 import {Button} from "@/components/ui/button"
 import {useEditorState} from "@/contexts/EditorContext"
-import {useParams} from "next/navigation";
-import {useMutation} from "convex/react";
-import {api} from "../../../../convex/_generated/api";
+import {useParams} from "next/navigation"
+import {useMutation} from "convex/react"
+import {api} from "../../../../convex/_generated/api"
+import {toast} from "sonner"
+
 
 function WorkspaceHeader({fileName}) {
     const {editorState} = useEditorState()
@@ -19,6 +21,7 @@ function WorkspaceHeader({fileName}) {
             fileId: fileId,
             createdBy: user?.primaryEmailAddress?.emailAddress
         })
+        toast("Note saved successfully.")
     }
 
     return (
