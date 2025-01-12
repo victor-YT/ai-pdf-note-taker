@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React from 'react'
 import {Bold, Italic, Highlighter, Strikethrough, Subscript, Superscript, Underline, Heading1, Heading2, Heading3, Code, AlignLeft, AlignCenter, AlignRight, Sparkles} from 'lucide-react'
 import {api} from "../../../../convex/_generated/api"
 import {useParams} from "next/navigation"
@@ -15,20 +15,22 @@ function EditorExtension({editor}) {
     const {user} = useUser()
 
     const onAiClick = async () => {
-        // toast("AI is getting the answer ...")
+        toast("AI is getting the answer ...")
         if (editor.state.selection.from === editor.state.selection.to) {
             console.log("No text selected, start tracking")
-            toast("Please select the content.")
+            const AllText = editor.getHTML()
+            editor.commands.focus()
+            editor.commands.setContent(AllText + '<p>->&nbsp;</p>')
+            let selectedText = ""
 
         } else {
-            toast("AI is getting the answer ...")
             const selectedText = editor.state.doc.textBetween(
                 editor.state.selection.from,
                 editor.state.selection.to,
                 ''
             )
             console.log(selectedText)
-
+            console.log(fileId)
             const result = await SearchAI({
                 query: selectedText,
                 fileId: fileId
@@ -37,13 +39,14 @@ function EditorExtension({editor}) {
             const UnformattedAns = JSON.parse(result)
             let AllUnformattedAns=''
             UnformattedAns && UnformattedAns.forEach(item => {
+                console.log("get iem page content", item.pageContent)
                 AllUnformattedAns = AllUnformattedAns + item.pageContent
+                console.log("AllUnformattedAns", AllUnformattedAns)
             })
-            console.log("AllUnformattedAns", AllUnformattedAns)
 
             const PROMT = "For question: " + selectedText + " and the given content as answer," +
                 " please give only one appropriate answer in string format (use '' to content the answer). The answer content is: " + AllUnformattedAns
-            console.log("PROMT:", PROMT)
+
             const AiModelResult = await chatSession.sendMessage(PROMT)
             console.log("final answer: ", AiModelResult.response.text())
             const finalAns = AiModelResult.response.text().replace("'", '').replace("'", '')

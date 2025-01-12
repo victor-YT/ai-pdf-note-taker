@@ -76,7 +76,7 @@ function UploadPdfDialog({children}) {
         // console.log(embeddingResult)
         setLoading(false)
         setOpen(false)
-        toast('File is ready ...')
+        toast('File is ready.')
     }
 
     return (

@@ -31,7 +31,7 @@ function TextEditor({fileId}) {
         extensions: [
             StarterKit,
             Placeholder.configure({
-                placeholder: 'staring writing ...'
+                placeholder: 'start writing ...'
             }),
             Bold,
             Italic,

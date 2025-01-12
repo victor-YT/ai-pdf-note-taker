@@ -13,13 +13,21 @@ function Dashboard() {
         userEmail: user?.primaryEmailAddress?.emailAddress
     })
 
-    console.log(fileList)
+    console.log("fileList:", fileList)
 
     return (
-        fileList?.length > 0
+        Boolean(fileList)
             ?
             <div>
                 <h2 className='font-medium text-2xl'>workspace</h2>
+                {fileList?.length === 0 && (
+                    <div className="flex items-center justify-center h-[80]vh">
+                        <div className="absolute top-[45%] transform text-center">
+                            <p>No files found</p>
+                            <p>Please upload new PDF</p>
+                        </div>
+                    </div>
+                )}
                 <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4
                 xl:grid-cols-5 gap-5 mt-8'>
                     {fileList?.map((file, index) => (
