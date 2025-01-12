@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react'
+import {useEditorState} from  '@/contexts/EditorContext'
 import {EditorContent, useEditor} from "@tiptap/react"
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from "@tiptap/extension-placeholder"
@@ -15,13 +16,13 @@ import Link from '@tiptap/extension-link'
 import Strike from '@tiptap/extension-strike'
 import EditorExtension from "@/app/workspace/_components/EditorExtension"
 import { all, createLowlight } from 'lowlight'
-import {useQuery} from "convex/react";
-import {api} from "../../../../convex/_generated/api";
+import {useQuery} from "convex/react"
+import {api} from "../../../../convex/_generated/api"
 
 const lowlight = createLowlight(all)
 
 function TextEditor({fileId}) {
-
+    const {setEditorState} = useEditorState()
     const notes = useQuery(api.notes.GetNotes, {
         fileId: fileId
     })
@@ -56,16 +57,19 @@ function TextEditor({fileId}) {
             }
         }
     })
+    // setEditor(editor)
 
     useEffect(() => {
         if (notes && editor) {
             editor.commands.setContent(notes)
+            setEditorState(editor)
         }
-    }, [notes && editor])
+    }, [notes && editor && setEditorState])
 
     if (!editor) {
         return null
     }
+    // setEditorState(editor)
 
     return (
         <div>

@@ -5,7 +5,8 @@ import {useParams} from "next/navigation"
 import {useAction, useMutation} from 'convex/react'
 import {chatSession} from "@/configs/AIModel"
 import {toast} from "sonner"
-import {useUser} from "@clerk/nextjs";
+import {useUser} from "@clerk/nextjs"
+
 
 function EditorExtension({editor}) {
     const {fileId} = useParams()
