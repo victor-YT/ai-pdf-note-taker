@@ -24,7 +24,7 @@ function Workspace() {
             <div>
                 <WorkspaceHeader fileName = {fileInfo?.fileName}/>
 
-                <div className='grid grid-cols-2 gap-5'>
+                <div className='grid grid-cols-2 w-full'>
                     <div>
                         {/* text editor */}
                         <TextEditor fileId={fileId}/>

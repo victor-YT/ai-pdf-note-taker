@@ -32,12 +32,12 @@ export default function Home() {
                 <Link href="/">
                     <Image src={'/logo.svg'} alt='logo' width={140} height={140}/>
                 </Link>
-                <div className="w-1/2 h-full flex flex-row items-center justify-end pr-7 space-x-7">
+                <div className="w-1/2 h-full flex flex-row items-center justify-end pr-7">
                     <a href='https://github.com/victor-YT/ai-pdf-note-taker' target="_blank" rel="noopener noreferrer">
-                        <p className='inline text-gray-500'>technical detail</p>
+                        <p className='inline mr-7 text-gray-500'>technical detail</p>
                     </a>
                     <Link href='/topbar'>
-                        <p className='inline text-gray-500'>contact</p>
+                        <p className='inline mr-7 text-gray-500'>contact</p>
                     </Link>
                     <UserButton/>
                     {!user &&
@@ -94,19 +94,5 @@ export default function Home() {
                 </div>
             </div>
         </div>
-        // <div className="relative w-screen h-screen">
-        //     <div className="absolute inset-0 bg-white/30 backdrop-blur-[20px] scale-125"></div>
-        //
-        //     <div className="flex items-center justify-center h-full">
-        //         <h1 className="text-7xl font-bold text-gray-800">
-        //             Simplify<span className="text-blue-600"> PDF</span>
-        //             <span className="text-red-600"> Note</span>-Taking
-        //         </h1>
-        //     </div>
-        // </div>
     )
 }
-
-
-
-

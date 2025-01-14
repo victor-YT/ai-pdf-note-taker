@@ -24,8 +24,9 @@ function Sidebar() {
 
     return (
         <div className='shadow-md h-screen p-7'>
-            <Image src={'/logo.svg'} alt='logo' width={170} height={120}/>
-
+            <Link href="/">
+                <Image src={'/logo.svg'} alt='logo' width={170} height={120}/>
+            </Link>
             <div className='mt-10'>
                 <UploadPdfDialog isMaxFile={(fileList?.length >= 100 && !GetUserInfo.upgrade)}>
                     <Button className='w-full'>+ Upload PDF</Button>
