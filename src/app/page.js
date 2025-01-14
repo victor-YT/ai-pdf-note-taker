@@ -30,9 +30,12 @@ export default function Home() {
             <div
                 className="w-screen, h-[12vh] p-4 pl-7 flex justify-between">
                 <Image src={'/logo.svg'} alt='logo' width={140} height={140}/>
-                <div className="bg-amber-500 w-1/2 h-full flex flex-row items-center justify-end pr-7">
+                <div className="w-1/2 h-full flex flex-row items-center justify-end pr-7 space-x-7">
+                    <a href='https://github.com/victor-YT/ai-pdf-note-taker' target="_blank" rel="noopener noreferrer">
+                        <p className='inline text-gray-500'>technical detail</p>
+                    </a>
                     <Link href='/topbar'>
-                        <p className='mr-7 text-gray-400'>contact</p>
+                        <p className='inline text-gray-500'>contact</p>
                     </Link>
                     <UserButton/>
                     {!user &&
