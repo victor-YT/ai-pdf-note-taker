@@ -24,7 +24,6 @@ function UpgradePlans() {
     }
     const onPaymentSuccess = async () => {
         console.log("do upgrading")
-        await sleep(5000);
         const result = await userUpgradePlan({userEmail: user?.primaryEmailAddress?.emailAddress})
         console.log(result)
         toast('Plan upgraded successfully !')
@@ -32,7 +31,7 @@ function UpgradePlans() {
 
     return (
         <div>
-            <h2 className='font-medium text-2xl'>plans</h2>
+            <h2 className='font-medium text-2xl'>Plans</h2>
             <p> Update your plan to upload multiple pdf to make notes</p>
 
             <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -146,7 +145,7 @@ function UpgradePlans() {
                                         purchase_units:[
                                             {
                                                 amount: {
-                                                    value: 0.01,
+                                                    value: 1,
                                                     currency_code: 'USD',
                                                 },
                                                 // description: `${user?.primaryEmailAddress?.emailAddress}`

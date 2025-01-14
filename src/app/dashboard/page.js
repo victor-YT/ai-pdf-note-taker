@@ -19,7 +19,7 @@ function Dashboard() {
         Boolean(fileList)
             ?
             <div>
-                <h2 className='font-medium text-2xl'>workspace</h2>
+                <h2 className='font-medium text-2xl'>Workspace</h2>
                 {fileList?.length === 0 && (
                     <div className="flex items-center justify-center h-[80]vh">
                         <div className="absolute top-[45%] transform text-center">
@@ -42,7 +42,7 @@ function Dashboard() {
             </div>
             :
             <div className='flex flex-col h-[85vh] overflow-y-hidden'>
-                <h2 className='font-medium text-2xl'>workspace</h2>
+                <h2 className='font-medium text-2xl'>Workspace</h2>
                 <div className='flex-grow'>
                     <div className="flex items-center justify-center h-full w-full">
                         <div className="loader">

@@ -10,7 +10,6 @@ import {useQuery} from "convex/react"
 import {api} from "../../../../convex/_generated/api"
 import {usePathname} from "next/navigation"
 import Link from "next/link"
-import {GetUserInfo} from "../../../../convex/user";
 
 function Sidebar() {
     const {user} = useUser()
@@ -46,14 +45,16 @@ function Sidebar() {
                 </div>
                 </Link>
             </div>
-            {GetUserInfo?.upgrade && <div className='absolute bottom-12 w-[80%]'>
+            {!(GetUserInfo?.upgrade) && <div className='absolute bottom-12 w-[80%]'>
                 <Progress value={fileList?.length > 0 ? fileList?.length : 0}/>
                 <p className="text-sm mt-1 text-center"> {fileList?.length > 0 ? fileList?.length : 0} out of 100 PDF Uploaded</p>
             </div>}
-            {!(GetUserInfo?.upgrade) && <div className='absolute bottom-12 w-[80%]'>
-                <Progress value={0}/>
-                <p className="text-sm mt-1 text-center">Unlimited PDF upload</p>
-            </div>}
+            {(GetUserInfo?.upgrade) &&
+                <div className='absolute bottom-12 w-[80%]'>
+                    <Progress value={0}/>
+                    <p className="text-sm mt-1 text-center">Unlimited PDF upload</p>
+                </div>
+            }
         </div>
     )
 }
