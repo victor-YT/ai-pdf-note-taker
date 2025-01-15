@@ -61,16 +61,15 @@ function TextEditor({fileId}) {
 
     useEffect(() => {
         if (editor) {
-            setEditorState(editor);
+            setEditorState(editor)
         }
-    }, [editor, setEditorState]);
+    }, [editor, setEditorState])
 
     useEffect(() => {
         if (notes && editor) {
             editor.commands.setContent(notes)
-            setEditorState(editor)
         }
-    }, [notes && editor && setEditorState])
+    }, [notes, editor])
 
     if (!editor) {
         return null
