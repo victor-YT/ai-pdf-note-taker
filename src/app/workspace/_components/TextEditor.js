@@ -60,6 +60,12 @@ function TextEditor({fileId}) {
     // setEditor(editor)
 
     useEffect(() => {
+        if (editor) {
+            setEditorState(editor);
+        }
+    }, [editor, setEditorState]);
+
+    useEffect(() => {
         if (notes && editor) {
             editor.commands.setContent(notes)
             setEditorState(editor)
